@@ -1,4 +1,4 @@
-pygame==2.1.0
-opencv-python
+playsound
+opencv-python-headless
 mediapipe
 streamlit
