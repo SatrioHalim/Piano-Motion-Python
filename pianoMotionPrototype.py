@@ -1,13 +1,9 @@
-import pygame
 import cv2
 import mediapipe as mp
 import math
 import streamlit as st
 from threading import Thread
-
-
-#Initialize Pygame
-pygame.mixer.init()
+from playsound import playsound  # Import playsound for audio playback
 
 # Initialize MediaPipe Hands
 mp_hands = mp.solutions.hands
@@ -52,9 +48,10 @@ def is_finger_closed(landmarks, tip, mcp, threshold=0.3):
     hand_scale = calculate_distance(landmarks[mp_hands.HandLandmark.WRIST], landmarks[mp_hands.HandLandmark.MIDDLE_FINGER_MCP])
     return tip_to_mcp_distance < hand_scale * threshold
 
+# Replace pygame with playsound for playing notes
 def play_note_async(note):
     def play():
-        pygame.mixer.Sound(note).play()
+        playsound(note)  # Use playsound to play the note sound
     Thread(target=play).start()
 
 # Streamlit app
@@ -66,37 +63,23 @@ st.write("- Stephen Christian Augustien (2702281241)")
 st.write("")
 
 st.header("Petunjuk Penggunaan")
-st.write("1. Pencet tombol start video untuk memulai program, tunggu sampai video muncul")
-st.write("2. Gunakan satu telapak tangan untuk memainkan nada")
-st.write("3. Tunjukan telapak tangan ke depan kamera sampai komputer dapat membaca struktur telapak tangan")
+st.write("1. Gunakan satu telapak tangan untuk memainkan nada")
+st.write("2. Tunjukan telapak tangan ke depan kamera sampai komputer dapat membaca struktur telapak tangan")
 st.write("(Diwakili oleh garis-garis dan titik merah pada layar)")
-st.write("4. Untuk memainkan salah satu nada, tekuk jari hingga membentuk sudut siku-siku")
+st.write("3. Untuk memainkan salah satu nada, tekuk jari hingga membentuk sudut siku-siku")
 st.write("")
 
 st.subheader("Selamat Mencoba !")
 st.write("")
 
-# State management for start and stop
-if "capture_running" not in st.session_state:
-    st.session_state.capture_running = False
-
-start_button = st.button("Start Video", key="start_button")
-stop_button = st.button("Stop Video", key="stop_button")
-
-if start_button:
-    st.session_state.capture_running = True
-
-if stop_button:
-    st.session_state.capture_running = False
-
 # Initialize video capture
-cap = None
-if st.session_state.capture_running:
-    cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)
 frame_placeholder = st.empty()
 
-# Main loop for video feed
-while st.session_state.capture_running:
+# Variable to track currently played notes
+current_notes = []
+
+while cap.isOpened():
     ret, frame = cap.read()
     if not ret:
         st.error("Cannot access webcam.")
@@ -115,7 +98,7 @@ while st.session_state.capture_running:
                 if is_finger_closed(hand_landmarks.landmark, tip, mcp):
                     if finger not in active_notes:
                         active_notes.add(finger)
-                        play_note_async(finger_notes[finger])
+                        play_note_async(finger_notes[finger])  # Play the note with playsound
                     # Add the note text to the current notes list
                     current_notes.append(finger_text[finger])
                 else:
@@ -128,6 +111,4 @@ while st.session_state.capture_running:
 
     frame_placeholder.image(frame, channels="BGR")
 
-if cap:
-    cap.release()
-pygame.quit()
+cap.release()
