@@ -1,6 +1,6 @@
 # Piano Motion by Doa Ibu
 
-This is a motion-based piano application using **MediaPipe** for hand tracking and **Pygame** for sound. It detects finger positions from a webcam feed and plays corresponding musical notes based on finger gestures. The app uses **Streamlit** to display the live video feed and interact with the user.
+This is a motion-based piano application using **MediaPipe** for hand tracking and **Pygame** for sound. It detects finger positions from a webcam feed and plays corresponding musical notes based on finger gestures. The app uses **Streamlit** (now only locally can't deploy to cloud due to several reason) to display the live video feed and interact with the user.
 
 ## Features:
 - **Hand Tracking**: Uses **MediaPipe** to detect and track hand landmarks.
