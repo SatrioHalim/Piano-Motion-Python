@@ -5,7 +5,8 @@ import math
 import streamlit as st
 from threading import Thread
 
-# Initialize Pygame
+
+#Initialize Pygame
 pygame.mixer.init()
 
 # Initialize MediaPipe Hands
