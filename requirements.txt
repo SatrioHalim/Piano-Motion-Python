@@ -2,3 +2,5 @@ playsound
 opencv-python==4.5.5.64
 mediapipe
 streamlit
+opencv-python-headless==4.5.5.64
+opencv-contrib-python-headless==4.5.5.64
